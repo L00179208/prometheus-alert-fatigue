@@ -35,6 +35,9 @@ docker/data/
 docker/*.env
 .env.*
 
+# Allow tracking of .env.example
+!.env.example
+
 # MySQL data (if any MySQL data directories are mapped to host)
 db_data/
 
