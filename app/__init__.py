@@ -1,29 +1,27 @@
-import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from .extensions import db, migrate, login_manager
+from .models import User  # Import models after initializing db to avoid circular imports
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object('config.dev.Config')
 
-    # Load the appropriate configuration based on FLASK_ENV
-    env = os.getenv('FLASK_ENV', 'dev')
-    if env == 'prod':
-        app.config.from_object('config.prod.Config')
-    elif env == 'staging':
-        app.config.from_object('config.staging.Config')
-    elif env == 'qa':
-        app.config.from_object('config.qa.Config')
-    else:
-        app.config.from_object('config.dev.Config')
-
+    # Initialize extensions
     db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+    login_manager.login_view = 'main.login'
 
-    # Import and register the blueprint
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     from .routes import main_blueprint
     app.register_blueprint(main_blueprint)
 
-    print(app.url_map)  # Debugging output
-
     return app
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
