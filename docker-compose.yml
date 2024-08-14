@@ -6,7 +6,7 @@ services:
     ports:
       - "5001:5000" # Change the host port to 5001 if 5000 is occupied
     env_file:
-      - .env # Specify the environment file to use
+      - .env.dev # Specify the environment file to use
     depends_on:
       - db
     networks:
