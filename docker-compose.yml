@@ -13,6 +13,9 @@ services:
       - db
     networks:
       - app-network
+    command: >
+      sh -c "flask db upgrade &&
+             flask run --host=0.0.0.0"
 
   db:
     image: mysql:5.7
@@ -23,7 +26,12 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    volumes:
+      - db_data:/var/lib/mysql # Attach the volume to persist MySQL data
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  db_data:
