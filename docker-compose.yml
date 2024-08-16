@@ -4,30 +4,32 @@ services:
   web:
     build: .
     ports:
-      - "5000:5000"
-    environment:
-      - FLASK_ENV=${FLASK_ENV}
-      - DATABASE_URL=${DATABASE_URL}
-      - SECRET_KEY=${SECRET_KEY}
+      - "5001:5000" # Change the host port to 5001 if 5000 is occupied
+    env_file:
+      - .env.dev # Specify the environment file to use
     depends_on:
       - db
     networks:
       - app-network
     command: >
-      sh -c "flask db upgrade &&
-             flask run --host=0.0.0.0"
+      sh -c "./wait-for-it.sh db:3306 -- flask db upgrade &&
+             flask run --host=0.0.0.0 --port=5000"
 
   db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    image: mysql:8.0
+    env_file:
+      - .env.dev # Specify the environment file to use for MySQL settings
     ports:
-      - "3306:3306"
+      - "3307:3306" # Use 3307 on the host machine if 3306 is in use
     networks:
       - app-network
     volumes:
-      - db_data:/var/lib/mysql # Attach the volume to persist MySQL data
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
 networks:
   app-network:
