@@ -13,6 +13,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      ENVIRONMENT: dev  # Set the environment here. Change this to prod, dev, or local as needed.
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -29,7 +32,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build Docker image
-      run: docker build . -t l00179208/promethuse-alert-manager:latest
+      run: docker build . -t l00179208/promethuse-alert-manager:latest --build-arg ENVIRONMENT=${{ env.ENVIRONMENT }}
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2

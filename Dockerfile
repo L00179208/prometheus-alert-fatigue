@@ -7,7 +7,7 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Define the build-time variable for the environment
-ARG ENVIRONMENT=development
+ARG ENVIRONMENT=dev
 
 # Set it as an environment variable
 ENV ENVIRONMENT=$ENVIRONMENT
@@ -28,11 +28,8 @@ EXPOSE 5000
 # Set the Flask configuration environment
 ENV FLASK_ENV=${ENVIRONMENT}
 
-# Set the correct configuration file based on the environment
-RUN cp config/${ENVIRONMENT}.py /app/config.py
-
 # Define the environment variable for Flask
 ENV FLASK_APP=run.py
 
-# Run the application
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Ensure the correct config file is used
+CMD if [ -f "config/${ENVIRONMENT}.py" ]; then cp "config/${ENVIRONMENT}.py" "config.py"; fi && flask run --host=0.0.0.0
