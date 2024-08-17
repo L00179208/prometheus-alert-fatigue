@@ -9,7 +9,7 @@ def create_app():
     
     # Determine the environment from the FLASK_ENV variable, default to 'local'
     env = os.getenv('FLASK_ENV', 'local')
-    
+    print(env)
     # Load the appropriate configuration class from the config_dict
     app.config.from_object(config_dict.get(env, 'local'))
 

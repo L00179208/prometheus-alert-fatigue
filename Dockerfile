@@ -32,4 +32,4 @@ ENV FLASK_ENV=${ENVIRONMENT}
 ENV FLASK_APP=run.py
 
 # Ensure the correct config file is used
-CMD if [ -f "config/${ENVIRONMENT}.py" ]; then cp "config/${ENVIRONMENT}.py" "config.py"; fi && flask run --host=0.0.0.0
+CMD if [ -f "config/${ENVIRONMENT}.py" ]; then cp "config/${ENVIRONMENT}.py" "prod.py"; fi && flask run --host=0.0.0.0
