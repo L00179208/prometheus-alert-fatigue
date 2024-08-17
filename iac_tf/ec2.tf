@@ -21,11 +21,24 @@ resource "aws_instance" "app_server" {
               service docker start
               usermod -aG docker ec2-user
 
-              # Pull the Docker image from Docker Hub
-              docker pull l00179208/promethuse-alert-manager:latest
+              # Create a Docker network
+              docker network create ${var.network_name}
 
-              # Run the Docker container on the specified port
-              docker run -d -p ${var.app_port}:${var.app_port} l00179208/promethuse-alert-manager:latest
+              # Run the MySQL container
+              docker run -d --name db --network ${var.network_name} \
+                -e MYSQL_ROOT_PASSWORD=${var.mysql_root_password} \
+                -e MYSQL_DATABASE=${var.mysql_database} \
+                -e MYSQL_USER=${var.mysql_user} \
+                -e MYSQL_PASSWORD=${var.mysql_password} \
+                -p 3306:3306 mysql:8.0
+
+              # Run the application container
+              docker run -d --name app --network ${var.network_name} \
+                -p ${var.app_port}:${var.app_port} \
+                -e DATABASE_URL=mysql+pymysql://root:${var.mysql_root_password}@db:3306/${var.mysql_database} \
+                -e FLASK_ENV=production \
+                -e SECRET_KEY=your_secret_key \
+                ${var.dockerhub_image}
               EOF
 }
 

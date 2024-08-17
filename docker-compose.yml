@@ -6,7 +6,7 @@ services:
     ports:
       - "5001:5000" # Change the host port to 5001 if 5000 is occupied
     env_file:
-      - .env.dev # Specify the environment file to use
+      - .env.${FLASK_ENV} # Load environment-specific .env file
     depends_on:
       - db
     networks:
@@ -18,7 +18,7 @@ services:
   db:
     image: mysql:8.0
     env_file:
-      - .env.dev # Specify the environment file to use for MySQL settings
+      - .env.${FLASK_ENV} # Load environment-specific .env file for MySQL settings
     ports:
       - "3307:3306" # Use 3307 on the host machine if 3306 is in use
     networks:

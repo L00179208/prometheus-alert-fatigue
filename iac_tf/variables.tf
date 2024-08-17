@@ -27,7 +27,6 @@ variable "instance_type_monitoring" {
   default     = "t3.micro" # Free tier eligible instance type
 }
 
-
 variable "vpc_cidr" {
   description = "The CIDR block for the VPC"
   type        = string
@@ -46,9 +45,46 @@ variable "availability_zone" {
   default     = "eu-north-1a" # Use a specific availability zone
 }
 
-
 variable "app_port" {
   description = "The port on which the Laravel app will run"
   type        = number
   default     = 5001
+}
+
+variable "network_name" {
+  description = "The Network name for the Docker containers"
+  type        = string
+  default     = "app-network"
+}
+
+variable "mysql_root_password" {
+  description = "The Root password of MySQL server"
+  type        = string
+  default     = "12345678"
+  sensitive   = true
+}
+
+variable "mysql_database" {
+  description = "The Database of the application connectes to MySQL"
+  type        = string
+  default     = "url_shortening"
+}
+
+variable "mysql_user" {
+  description = "The non root user of MySQL server"
+  type        = string
+  default     = "appuser"
+}
+
+variable "mysql_password" {
+  description = "MySQL user password"
+  type        = string
+  default     = "Root1234"
+  sensitive   = true
+}
+
+variable "dockerhub_image" {
+  description = "Dockerhub image path"
+  type        = string
+  default     = "l00179208/promethuse-alert-manager:latest"
 }
