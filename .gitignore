@@ -151,3 +151,4 @@ dmypy.json
 
 #Remove Backup of TF State File
 iac_tf/terraform.tfstate.backup 
+iac_tf/.terraform/
