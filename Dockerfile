@@ -6,6 +6,12 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
+# Define the build-time variable for the environment
+ARG ENVIRONMENT=development
+
+# Set it as an environment variable
+ENV ENVIRONMENT=$ENVIRONMENT
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
@@ -19,7 +25,13 @@ RUN chmod +x /app/wait-for-it.sh
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Define environment variable
+# Set the Flask configuration environment
+ENV FLASK_ENV=${ENVIRONMENT}
+
+# Set the correct configuration file based on the environment
+RUN cp config/${ENVIRONMENT}.py /app/config.py
+
+# Define the environment variable for Flask
 ENV FLASK_APP=run.py
 
 # Run the application
