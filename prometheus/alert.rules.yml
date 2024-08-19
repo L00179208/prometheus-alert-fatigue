@@ -1,0 +1,11 @@
+groups:
+- name: terraform_alerts
+  rules:
+  - alert: ConfigurationDriftDetected
+    expr: up == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Configuration Drift Detected"
+      description: "Configuration drift has been detected for {{$labels.instance}}. Investigate the issue."

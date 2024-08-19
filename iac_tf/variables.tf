@@ -37,6 +37,7 @@ variable "availability_zone" {
   type        = string
   description = "Availability zone to deploy the resources"
 }
+
 variable "mysql_root_password" {
   description = "The root password for MySQL."
   type        = string
